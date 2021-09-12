@@ -1,0 +1,14 @@
+# Node
+node_modules/
+package-lock.json
+
+# Secrets
+secrets/
+# Compiled
+out/
+
+# Temporary buffers (used in file upload)
+tmp/
+
+# macOS .DS_Store
+.DS_Store
