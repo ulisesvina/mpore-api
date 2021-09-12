@@ -4,8 +4,8 @@
   "description": "",
   "main": "src/main.ts",
   "scripts": {
-    "test": "NODE_ENV=development nodemon --watch \"**\" --ext \"ts,json\" --exec \"ts-node ./src/main.ts\"",
-    "start": "NODE_ENV=production node ./out/main.js",
+    "test": "nodemon --watch \"**\" --ext \"ts,json\" --exec \"ts-node ./src/main.ts\"",
+    "start": "node ./out/main.js",
     "build": "rm -rf ./out/* && tsc"
   },
   "repository": {
