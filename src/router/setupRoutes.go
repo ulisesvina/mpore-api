@@ -1,23 +1,27 @@
 package router
 
 import (
+	"fmt"
 	"net/http"
 	"os"
-
 	"github.com/gorilla/mux"
 )
 
-func SetupRoutes() {
-	r := mux.NewRouter()
-	fs := http.FileServer(http.Dir("static"))
-	//si queremos agregar mas opciones para las rutas simplemente usemos queryurls vales?
+func register(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("register")
+}
 
-	r.Handle("/", fs)
+func SetupRoutes() {
+	fmt.Println(buffer)
+
+ 	r := mux.NewRouter() 
+
 	port, err := os.LookupEnv("PORT")
 	if !err {
 		port = ":8080"
 	}
 
-	http.ListenAndServe(port, r)
+	r.HandleFunc("/auth/register", register).Methods("POST")
 
+	http.ListenAndServe(port, r)
 }

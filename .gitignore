@@ -4,6 +4,7 @@ package-lock.json
 
 # Secrets
 secrets/
+
 # Compiled
 out/
 
