@@ -1,27 +1,23 @@
 package router
 
 import (
-	"fmt"
 	"net/http"
 	"os"
+
 	"github.com/gorilla/mux"
+	"github.com/mporeapp/mpore-api/src/controllers"
 )
 
-func register(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("register")
-}
-
 func SetupRoutes() {
-	fmt.Println(buffer)
 
- 	r := mux.NewRouter() 
+	r := mux.NewRouter()
 
 	port, err := os.LookupEnv("PORT")
 	if !err {
 		port = ":8080"
 	}
 
-	r.HandleFunc("/auth/register", register).Methods("POST")
+	r.HandleFunc("/auth/register", controllers.Register).Methods("POST")
 
 	http.ListenAndServe(port, r)
 }
