@@ -8,31 +8,21 @@ import (
 	"gorm.io/gorm"
 )
 
-var (
-	DB = getConnection()
-)
+func GetConnection() *gorm.DB {
+	dbConfig, exist := os.LookupEnv("DB_CONFIG")
+	fmt.Println((dbConfig))
+	// DB_CONFIG FORMAT = host= user= password= dbname= port= sslmode= TimeZone=America/Mexico_City
 
-func getConnection() *gorm.DB {
-	databaseURL, exist := os.LookupEnv("DATABASE_URL")
 	if !exist {
-		databaseURL = "postgresql://postgres@127.0.0.1:5432/mpore"
-		//estamos usando el puerto por default de postgresql en caso de que se este usando en localhost
+		dbConfig = "postgresql://postgres@127.0.0.1:5432/mpore"
+		// Using localhost connection if DB_CONFIG is undefined
 	}
 
-	db, err := gorm.Open(postgres.Open(databaseURL), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(dbConfig), &gorm.Config{})
+
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
+
 	return db
-}
-
-// esto solo es para probar
-func TestDB() {
-
-	DB.Table("users").Create(&map[string]interface{}{"username": "cummaster", "email": "com@asdf", "hashed_password": "cumaasdfasdf"})
-	res := []map[string]interface{}{}
-	DB.Table("users").Find(&res)
-	for _, v := range res {
-		fmt.Println(v)
-	}
 }
