@@ -2,8 +2,37 @@ const { Router } = require("express"),
   { PrismaClient } = require("@prisma/client"),
   bcrypt = require("bcrypt"),
   jwt = require("jsonwebtoken"),
+  { handle500 } = require("../lib/handle"),
   prisma = new PrismaClient(),
   router = Router();
+
+router.post("/register", async (req, res) => {
+  const { username, email, password } = req.body;
+  try {
+    const existingUsers = await prisma.user.findMany({
+      where: {
+        OR: [{ username }, { email }],
+      },
+    });
+    if (existingUsers.length > 0)
+      return res
+        .status(400)
+        .json({ message: "Username or email already exists", status: 400 });
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await prisma.user.create({
+      data: {
+        username,
+        email,
+        bio: "Hello, I'm a new Mpore user!",
+        password: hashedPassword,
+      },
+    });
+    res.status(201).json({ message: "User created", status: 201 });
+  } catch (error) {
+    handle500(error, res);
+  }
+});
 
 router.post("/login", async (req, res) => {
   const { username, email, password } = req.body;
@@ -46,12 +75,7 @@ router.post("/login", async (req, res) => {
       ),
     });
   } catch (error) {
-    res.status(500).json({
-      message:
-        "Please open an issue in https://github.com/ulisesvina/mpore-api with the following data: " +
-        error.message,
-      status: 500,
-    });
+    handle500(error, res);
   }
 });
 
