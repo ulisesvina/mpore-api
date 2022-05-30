@@ -1,0 +1,23 @@
+{
+  "name": "mpore-api",
+  "version": "0.1.0",
+  "description": "API for Mpore",
+  "main": "src/main.js",
+  "repository": "https://github.com/ulisesvina/mpore-api",
+  "author": "Ulises Viña",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon ."
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16",
+    "prisma": "^3.14.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^3.14.0",
+    "bcrypt": "^5.0.1",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1"
+  }
+}

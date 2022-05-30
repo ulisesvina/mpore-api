@@ -1,15 +1,5 @@
-# Node
 node_modules/
-package-lock.json
+.env
 
-# Secrets
-secrets/
-
-# Compiled
-out/
-
-# Temporary buffers (used in file upload)
-tmp/
-
-# macOS .DS_Store
-.DS_Store
+# The folder below is ignored in this repository because it's out of it's scope. Though, it's contents will be available on https://github.com/ulisesvina/mpore-infra
+prisma
