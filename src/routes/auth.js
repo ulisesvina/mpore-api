@@ -2,7 +2,7 @@ const { Router } = require("express"),
   { PrismaClient } = require("@prisma/client"),
   bcrypt = require("bcrypt"),
   jwt = require("jsonwebtoken"),
-  { handle500 } = require("../lib/handle"),
+  errorHandler = require("../lib/errorHandle"),
   prisma = new PrismaClient(),
   router = Router();
 
@@ -15,9 +15,10 @@ router.post("/register", async (req, res) => {
       },
     });
     if (existingUsers.length > 0)
-      return res
-        .status(400)
-        .json({ message: "Username or email already exists", status: 400 });
+      return errorHandler.badRequest(
+        { message: "Username or email already exists" },
+        res
+      );
 
     const hashedPassword = await bcrypt.hash(password, 10);
     await prisma.user.create({
@@ -30,7 +31,7 @@ router.post("/register", async (req, res) => {
     });
     res.status(201).json({ message: "User created", status: 201 });
   } catch (error) {
-    handle500(error, res);
+    errorHandler.internalServerError(error, res);
   }
 });
 
@@ -38,9 +39,10 @@ router.post("/login", async (req, res) => {
   const { username, email, password } = req.body;
 
   if (!username && !email)
-    return res
-      .status(400)
-      .json({ message: "Username or email is required", status: 400 });
+    return errorHandler.badRequest(
+      { message: "Username or email is required" },
+      res
+    );
 
   try {
     const user = await prisma.user.findMany({
@@ -50,15 +52,16 @@ router.post("/login", async (req, res) => {
     });
 
     if (user.length === 0) {
-      return res.status(400).json({ message: "User not found", status: 400 });
+      return errorHandler.badRequest(
+        { message: "Username or email is invalid" },
+        res
+      );
     }
 
     const isMatch = await bcrypt.compare(password, user[0].password);
 
     if (!isMatch) {
-      return res
-        .status(400)
-        .json({ message: "Password is incorrect", status: 400 });
+      return errorHandler.badRequest({ message: "Password is invalid" }, res);
     }
 
     return res.status(200).json({
@@ -75,7 +78,7 @@ router.post("/login", async (req, res) => {
       ),
     });
   } catch (error) {
-    handle500(error, res);
+    errorHandler.internalServerError(error, res);
   }
 });
 
